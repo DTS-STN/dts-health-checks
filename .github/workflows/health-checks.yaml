@@ -1,0 +1,31 @@
+name: health-checks
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/health-checks.yml
+      - packages/health-checks/**
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/health-checks.yml
+      - packages/health-checks/**
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+      - run: npm clean-install
+        working-directory: packages/health-checks
+      - run: npm run test
+        working-directory: packages/health-checks
+      - run: npm run build
+        working-directory: packages/health-checks
